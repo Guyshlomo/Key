@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Key Community",
+    "slug": "key-community",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./images/Logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./images/Logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#EFF5F5"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.keycommunity.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "האפליקציה זקוקה למיקום שלך כדי להציג מפה ולמצוא התאמות בקרבתך.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "האפליקציה זקוקה למיקום שלך כדי להציג מפה ולמצוא התאמות בקרבתך.",
+        "NSLocationAlwaysUsageDescription": "האפליקציה זקוקה למיקום שלך כדי להציג מפה ולמצוא התאמות בקרבתך.",
+        "NSBluetoothAlwaysUsageDescription": "האפליקציה זקוקה לבלוטות' כדי להתחבר למכשירים אחרים בקהילה.",
+        "NSBluetoothPeripheralUsageDescription": "האפליקציה זקוקה לבלוטות' כדי להתחבר למכשירים אחרים בקהילה."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./images/Logo.png",
+        "backgroundColor": "#EFF5F5"
+      },
+      "package": "com.keycommunity.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_ADVERTISE"
+      ]
+    },
+    "web": {
+      "favicon": "./images/Logo.png"
+    }
+  }
+}
+
