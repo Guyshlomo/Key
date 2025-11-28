@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert, Modal, Animated, Dimensions } from "react-native";
 import { colors } from "../../theme";
 import { getProfile } from "../../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 interface ProfileData {
   profile: {
@@ -26,6 +27,10 @@ export default function ProfileScreen() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [settingsVisible, setSettingsVisible] = useState(false);
+
+  const screenWidth = Dimensions.get("window").width;
+  const slideAnim = useRef(new Animated.Value(screenWidth)).current;
 
   useEffect(() => {
     loadProfile();
@@ -79,6 +84,24 @@ export default function ProfileScreen() {
     return labels;
   };
 
+  const openSettings = () => {
+    setSettingsVisible(true);
+    slideAnim.setValue(screenWidth);
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeSettings = () => {
+    Animated.timing(slideAnim, {
+      toValue: screenWidth,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => setSettingsVisible(false));
+  };
+
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
@@ -112,6 +135,15 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+      {/* Settings icon */}
+      <View style={styles.settingsContainer}>
+        <TouchableOpacity
+          onPress={openSettings}
+        >
+          <Ionicons name="settings-outline" size={24} color={colors.deepBlack} />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.header}>
         {profile.profile_image ? (
           <Image
@@ -149,9 +181,37 @@ export default function ProfileScreen() {
         )}
       </View>
 
-      <TouchableOpacity style={styles.editButton} onPress={loadProfile}>
-        <Text style={styles.editButtonText}>Edit Profile</Text>
-      </TouchableOpacity>
+     
+
+      {/* Slide-in Settings Panel */}
+      <Modal visible={settingsVisible} transparent animationType="none">
+        <View style={styles.settingsOverlay}>
+          {/* tap outside to close */}
+          <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeSettings} />
+          <Animated.View
+            style={[
+              styles.settingsPanel,
+              {
+                transform: [{ translateX: slideAnim }],
+              },
+            ]}
+          >
+            <View style={styles.settingsHeader}>
+              <Text style={styles.settingsTitle}>Settings</Text>
+              <TouchableOpacity onPress={closeSettings}>
+                <Ionicons name="close" size={22} color={colors.deepBlack} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.settingsDivider} />
+
+            <View style={styles.settingsContent}>
+              <Text style={styles.settingsItemText}>Edit profile details</Text>
+              <Text style={styles.settingsItemText}>Manage notifications</Text>
+              <Text style={styles.settingsItemText}>Privacy & visibility</Text>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -170,8 +230,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  header: {
+  settingsContainer: {
+    width: "100%",
+    alignItems: "flex-end",
     paddingTop: 40,
+    paddingRight: 20,
+  },
+  header: {
+    paddingTop: 20,
     alignItems: "center",
     marginBottom: 40,
   },
@@ -269,10 +335,50 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 0.2,
   },
-  editButtonText: {
-    color: "#000",
-    fontSize: 16,
+
+  settingsOverlay: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "flex-end",
+  },
+  backdrop: {
+    flex: 1,
+  },
+  settingsPanel: {
+    width: "75%",
+    backgroundColor: "#fff",
+    paddingTop: 40,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+    borderTopLeftRadius: 24,
+    borderBottomLeftRadius: 24,
+  },
+  settingsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  settingsDivider: {
+    height: 1,
+    backgroundColor: colors.cloudGray,
+    marginTop: 12,
+    marginBottom: 16,
+  },
+  settingsTitle: {
+    fontSize: 24,
+    color: colors.deepBlack,
     fontFamily: "sf-pro-display-thin",
+    marginTop: 30,
+  },
+  settingsContent: {
+    gap: 12,
+  },
+  settingsItemText: {
+    fontSize: 18,
+    color: colors.deepBlack,
+    fontFamily: "sf-pro-display-thin",
+    marginTop: 10,
   },
 });
 

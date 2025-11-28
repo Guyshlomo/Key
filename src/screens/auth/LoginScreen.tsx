@@ -27,9 +27,11 @@ export default function LoginScreen({ navigation }: any) {
         }
       }
 
+      const goTo = response.profileCompleted ? 'MainApp' : 'ProfileSetup';
+
       navigation.reset({
         index: 0,
-        routes: [{ name: 'ProfileSetup' }],
+        routes: [{ name: goTo }],
       });
     } catch (error: any) {
       Alert.alert("Login Failed", error.message || "Invalid credentials");

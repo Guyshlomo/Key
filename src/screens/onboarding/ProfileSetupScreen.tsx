@@ -39,6 +39,8 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupProps) {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
@@ -98,8 +100,8 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupProps) {
 
   const handleNext = async () => {
     if (step === 1) {
-      if (!name || !email || !birthDate) {
-        Alert.alert("Missing Info", "Please fill in all fields");
+      if (!name || !email || !birthDate || !username || !password) {
+        Alert.alert("Missing Info", "Please fill in all fields, including username and password");
         return;
       }
       setStep(2);
@@ -131,6 +133,8 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupProps) {
           email: email,
           birth_date: formatDate(birthDate),
           profile_image: profilePicture || undefined,
+          username,
+          password,
           intents,
         });
 
@@ -229,8 +233,28 @@ export default function ProfileSetupScreen({ navigation }: ProfileSetupProps) {
               onChangeText={setName}
             />
 
-            {/* Email */}
+            {/* Username */}
             <TextInput
+              placeholder="Set new username"
+              style={styles.input}
+              placeholderTextColor={"#000"}
+              autoCapitalize="none"
+              value={username}
+              onChangeText={setUsername}
+            />
+
+            {/* Password */}
+            <TextInput
+              placeholder="Set new password"
+              style={styles.input}
+              placeholderTextColor={"#000"}
+              secureTextEntry
+              autoCapitalize="none"
+              value={password}
+              onChangeText={setPassword}
+            />
+                 {/* Email */}
+                 <TextInput
               placeholder="Email"
               style={styles.input}
               placeholderTextColor={"#000"}

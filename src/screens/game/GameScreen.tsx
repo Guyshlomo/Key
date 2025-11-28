@@ -85,8 +85,7 @@ export default function GameScreen() {
 
       {/* Content */}
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Key Quest</Text>
-        <Text style={styles.subtitle}>Monthly City Game</Text>
+       
         
         {/* Countdown */}
         <View style={styles.countdownContainer}>
@@ -212,8 +211,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 40,
     zIndex: 1,
   },
   title: {
@@ -247,12 +248,7 @@ const styles = StyleSheet.create({
     borderColor: colors.cloudGray,
     borderRadius: 12,
     padding: 10,
-    backgroundColor: colors.mistWhite,
-    shadowColor: "#94CECC",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 50,
-    elevation: 30,
+  
   },
   timeUnit: {
     alignItems: "center",

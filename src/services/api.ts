@@ -74,6 +74,8 @@ export const updateProfile = async (
     email: string;
     birth_date: string;
     profile_image?: string;
+    username?: string;
+    password?: string;
     intents?: {
       dating?: boolean;
       sport_partner?: boolean;
