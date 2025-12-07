@@ -1,16 +1,18 @@
 import axios from "axios";
 import { Platform } from "react-native";
 
-// For iOS simulator use localhost, for Android emulator use 10.0.2.2, for physical device use your computer's IP
-// To find your computer's IP: ifconfig (Mac/Linux) or ipconfig (Windows)
-// For physical device, replace localhost with your computer's IP address (e.g., "http://192.168.1.100:4000/api")
+// For iOS simulator use your computer's IP, for Android emulator use 10.0.2.2
+// To find your computer's IP on Mac: `ipconfig getifaddr en0` (Wi‑Fi)
+// Replace LOCAL_NETWORK_IP below with your computer's IP (e.g. "192.168.1.23")
 const getApiUrl = () => {
+  const LOCAL_NETWORK_IP = "192.168.1.18"; // TODO: change to your actual IP
+
   // Development mode
   if (Platform.OS === "android") {
     return "http://10.0.2.2:4000/api"; // Android emulator
   }
-  // iOS simulator or physical device - use your computer's IP for physical device
-  return "http://localhost:4000/api"; // Change to your computer's IP for physical device
+  // iOS simulator or physical device - use your computer's IP
+  return `http://${LOCAL_NETWORK_IP}:4000/api`;
 };
 
 const API_URL = getApiUrl();
