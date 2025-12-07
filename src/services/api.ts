@@ -117,3 +117,12 @@ export const updateProfile = async (
   }
 };
 
+export const registerPushToken = async (token: string, platform: string) => {
+  try {
+    await axios.post(`${API_URL}/push-token`, { token, platform });
+  } catch (error: any) {
+    console.error("Failed to register push token:", error.message);
+  }
+};
+
+

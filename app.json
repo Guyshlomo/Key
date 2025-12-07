@@ -44,7 +44,12 @@
     },
     "web": {
       "favicon": "./images/Logo.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "143c2fcb-86c7-4618-909c-c05a85704586"
+      }
+    },
+    "owner": "guyshlomo"
   }
 }
-

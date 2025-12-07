@@ -13,6 +13,7 @@ const onboardingPages = [
   {
     title: "Reconnect with reality.",
     image: welcomeLogo,
+   
   },
   {
     title: "Real connections",
@@ -258,6 +259,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
     overflow: "hidden",
+  },
+  imageBackground: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    resizeMode: "cover",
   },
   imageContainer: {
     height: "70%",
