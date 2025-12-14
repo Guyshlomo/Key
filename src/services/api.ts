@@ -30,7 +30,7 @@ export const login = async (username: string, password: string) => {
     console.log("With username:", username);
     
     const response = await axios.post(`${API_URL}/auth/login`, {
-      phone: username,
+      username,
       password,
     });
     
@@ -114,6 +114,44 @@ export const updateProfile = async (
       throw new Error(error.message);
     }
     throw new Error("Failed to update profile");
+  }
+};
+
+export const joinCommunity = async (token: string, communityId: string) => {
+  try {
+    await axios.post(`${API_URL}/communities/${communityId}/join`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error: any) {
+    console.error("Failed to join community", error.message);
+  }
+};
+
+export const getCommunities = async (token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/communities`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || "Failed to load communities");
+  }
+};
+
+export const getMyCommunities = async (token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/communities/my`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || "Failed to load my communities");
   }
 };
 

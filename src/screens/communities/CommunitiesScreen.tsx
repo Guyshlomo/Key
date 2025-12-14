@@ -1,27 +1,53 @@
-import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { colors } from "../../theme";
-
-const DATA = [
-  { id: "1", name: "Morning Runners TLV", category: "Sport" },
-  { id: "2", name: "Tech Founders", category: "Entrepreneurship" },
-  { id: "3", name: "Friday Dinner Club", category: "Social" },
-];
+import { getMyCommunities } from "../../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CommunitiesScreen() {
+  const [communities, setCommunities] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("accessToken");
+      if (token) {
+        const data = await getMyCommunities(token);
+        setCommunities(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Worlds</Text>
-      <FlatList
-        data={DATA}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>{item.category}</Text>
-          </View>
-        )}
-        contentContainerStyle={styles.listContent}
-      />
+      <Text style={styles.header}> My Worlds</Text>
+      
+      {loading ? (
+        <ActivityIndicator color={colors.brandTurquoise} style={{ marginTop: 20 }} />
+      ) : (
+        <FlatList
+          data={communities}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>{item.name}</Text>
+              <Text style={styles.cardCategory}>{item.category}</Text>
+            </View>
+          )}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>You haven't joined any communities yet.</Text>
+          }
+          contentContainerStyle={styles.listContent}
+        />
+      )}
     </View>
   );
 }
@@ -67,6 +93,12 @@ const styles = StyleSheet.create({
     color: "#000",
     marginTop: 4,
     fontFamily: "sf-pro-display-thin",
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 20,
+    color: colors.urbanGray,
+    fontSize: 16,
   },
 });
 

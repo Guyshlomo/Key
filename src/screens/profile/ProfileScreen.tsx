@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert, Modal, Animated, Dimensions } from "react-native";
 import { colors } from "../../theme";
-import { getProfile } from "../../services/api";
+import { getProfile, getMyCommunities } from "../../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -25,6 +25,7 @@ interface ProfileData {
 
 export default function ProfileScreen() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [myCommunities, setMyCommunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -48,6 +49,15 @@ export default function ProfileScreen() {
 
       const data = await getProfile(token);
       setProfileData(data);
+
+      // Load joined communities
+      try {
+        const comms = await getMyCommunities(token);
+        setMyCommunities(comms);
+      } catch (e) {
+        console.log("Failed to load communities for profile", e);
+      }
+
       setError(null);
     } catch (err: any) {
       console.error("Error loading profile:", err);
@@ -166,22 +176,24 @@ export default function ProfileScreen() {
         )}
       </View>
 
+    
+
+      {/* My Communities Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>My Intents</Text>
-        {intentLabels.length > 0 ? (
-          <View style={styles.tags}>
-            {intentLabels.map((label, index) => (
-              <View key={index} style={styles.tag}>
-                <Text style={styles.tagText}>{label}</Text>
+        <Text style={styles.sectionTitle}>My Communities</Text>
+        {myCommunities.length > 0 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.communitiesList}>
+            {myCommunities.map((comm) => (
+              <View key={comm.id} style={styles.communityCard}>
+                <Text style={styles.communityName}>{comm.name}</Text>
+                <Text style={styles.communityCategory}>{comm.category}</Text>
               </View>
             ))}
-          </View>
+          </ScrollView>
         ) : (
-          <Text style={styles.noIntentsText}>No intents selected</Text>
+          <Text style={styles.noIntentsText}>Not a member of any community yet</Text>
         )}
       </View>
-
-     
 
       {/* Slide-in Settings Panel */}
       <Modal visible={settingsVisible} transparent animationType="none">
@@ -334,6 +346,28 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     borderWidth: 0.2,
+  },
+
+  communitiesList: {
+    flexDirection: 'row',
+  },
+  communityCard: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 0.5,
+    borderColor: colors.cloudGray,
+    marginRight: 12,
+    minWidth: 120,
+  },
+  communityName: {
+    fontWeight: '600',
+    color: colors.deepBlack,
+    marginBottom: 4,
+  },
+  communityCategory: {
+    fontSize: 12,
+    color: colors.urbanGray,
   },
 
   settingsOverlay: {
